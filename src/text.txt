@@ -1,0 +1,12 @@
+** -= KNOWN ISSUES =- **
+- zoom is bugged
+- agent doesnt appear properly when zoomed out
+- stack overflow after three attempts
+- A* pathfinding not implemented
+
+** -= PLANNED FIXES =- **
+- A* pathfinding
+- animated sprite character (optional)
+- cursor pointer pixel coloring
+- progressive pathfinding instead of instant
+- node log

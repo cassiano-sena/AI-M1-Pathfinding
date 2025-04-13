@@ -1,3 +1,7 @@
+/**
+ * AGENTE QUE ESTARÁ NO MAPA
+ */
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 
@@ -67,12 +71,12 @@ public class MeuAgente extends Agente {
 	public void DesenhaSe(Graphics2D dbg, int XMundo, int YMundo) {
 		// TODO Auto-generated method stub
 		dbg.setColor(color);
-		
+
 		dbg.drawOval((int)(X-10)-XMundo, (int)(Y-10)-YMundo, 20, 20);
-		
+
 		double linefx = X + 10*Math.cos(ang);
 		double linefy = Y + 10*Math.sin(ang);dbg.drawLine((int)X-XMundo,(int)Y-YMundo, (int)linefx-XMundo, (int)linefy-YMundo);
-	
+
 	}
 
 	public void calculaIA(int DiffTime){

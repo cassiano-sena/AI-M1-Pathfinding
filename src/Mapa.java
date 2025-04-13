@@ -1,3 +1,7 @@
+/**
+ * MAPA
+ */
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.*;
@@ -41,16 +45,16 @@ public  class Mapa {
 	    		
 	    		
 	    	
-	    		int Versao = data.readInt(); // lê Versao
-	        	Largura = ReadCInt(data);    // lê Largura
-	        	Altura = ReadCInt(data);	// lê Largura
+	    		int Versao = data.readInt(); // lï¿½ Versao
+	        	Largura = ReadCInt(data);    // lï¿½ Largura
+	        	Altura = ReadCInt(data);	// lï¿½ Largura
 	        	
 	        	System.out.println(" Largura "+Largura);
 	        	
 	           	System.out.println(" Altura "+Altura);
 	           	
-	        	int ltilex =  ReadCInt(data);// lê Larg Tile
-	        	int ltiley =  ReadCInt(data);// lê Altura Tile
+	        	int ltilex =  ReadCInt(data);// lï¿½ Larg Tile
+	        	int ltiley =  ReadCInt(data);// lï¿½ Altura Tile
 	        	
 	        	System.out.println(" ltilex "+ltilex);
 	        	
@@ -58,21 +62,21 @@ public  class Mapa {
 	           	
 	        	byte nome[] = new byte[32]; 
 
-	        	data.read(nome,0,32);       // lê Nome Tilemap
+	        	data.read(nome,0,32);       // lï¿½ Nome Tilemap
 	        	data.read(nome,0,32); 
 	        	
-	        	int numLayers =  ReadCInt(data);// lê numero de Layers
-	        	int numTiles =  ReadCInt(data);// lê numero de Tiles
+	        	int numLayers =  ReadCInt(data);// lï¿½ numero de Layers
+	        	int numTiles =  ReadCInt(data);// lï¿½ numero de Tiles
 	        	
 	           	System.out.println(" numLayers "+numLayers);
 	           	System.out.println(" numTiles "+numTiles);
 	        	
-	            int BytesPorTiles =  ReadCInt(data); // lê numero de bytes por tile;
+	            int BytesPorTiles =  ReadCInt(data); // lï¿½ numero de bytes por tile;
 	            
 	           	System.out.println(" BytesPorTiles "+BytesPorTiles);
 	           	
-	            int vago1 =  ReadCInt(data); // lê vago;
-	            int vago2 =  ReadCInt(data); // lê vago;            
+	            int vago1 =  ReadCInt(data); // lï¿½ vago;
+	            int vago2 =  ReadCInt(data); // lï¿½ vago;            
 	            
 	        	mapa = new int[Altura][Largura];
 	        	mapa2 = new int[Altura][Largura];

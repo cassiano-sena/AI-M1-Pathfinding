@@ -1,3 +1,6 @@
+/**
+ * CLASSE NODO
+ */
 
 public class Nodo {
 	int x;

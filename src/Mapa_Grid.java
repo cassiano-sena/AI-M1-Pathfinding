@@ -44,12 +44,21 @@ public class Mapa_Grid extends Mapa{
 		int cor = buf.getElem(0);
 		for(int j = 0; j < imagem.getHeight();j++){
 			for(int i = 0; i < imagem.getWidth();i++){
-				int cor1 = buf.getElem(imagem.getWidth()*j+i);
-				if(cor==cor1){
-					mapa[j][i] = 0;
-				}else{
-					mapa[j][i] = 1;
-				}
+//***********************
+//				old
+//***********************
+//				int cor1 = buf.getElem(imagem.getWidth()*j+i);
+//				if(cor==cor1){
+//					mapa[j][i] = 0;
+//				}else{
+//					mapa[j][i] = 1;
+//				}
+//***********************
+//				new
+//***********************
+				int cor1 = imagem.getRGB(i, j);
+				if (cor1 == Color.WHITE.getRGB()) mapa[j][i] = 0;
+				else mapa[j][i] = 1;
 			}
 		}
 	}
@@ -84,10 +93,24 @@ public class Mapa_Grid extends Mapa{
         dbg.setColor(Color.black);
         for(int j = 0; j < NumeroTilesY + somay; j++){            
             for(int i = 0; i < NumeroTilesX + somax; i++){
-                if(mapa[j+(MapY>>4)][i+(MapX>>4)]>0){
-                	dbg.fillRect((i<<4)-offx,(j<<4)-offy,16,16);
-                }
-            }
+//******************************
+//				old
+//******************************
+//                if(mapa[j+(MapY>>4)][i+(MapX>>4)]>0){
+//                	dbg.fillRect((i<<4)-offx,(j<<4)-offy,16,16);
+//                }
+//******************************
+//				new
+//******************************
+				int mj = j + (MapY >> 4);
+				int mi = i + (MapX >> 4);
+				if (mj < Altura && mi < Largura) {
+					if (mapa[mj][mi] > 0) {
+						dbg.fillRect((i << 4) - offx, (j << 4) - offy, 16, 16);
+					}
+				}
+
+			}
         }
 	}
 }
