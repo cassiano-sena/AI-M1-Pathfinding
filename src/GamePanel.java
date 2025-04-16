@@ -39,8 +39,8 @@ Mapa_Grid mapa;
 
 double posx,posy;
 
-//MeuAgente meuHeroi = null;
-NewAgente newHeroi = null;
+MeuAgente newHeroi = null;
+//NewAgente newHeroi = null;
 
 //TODO ESSE È O RESULTADO
 int caminho[] = null;
@@ -52,88 +52,88 @@ int ntileH = 50;
 
 Font f = new Font("", Font.BOLD, 20);
 
-	class AStarNode implements Comparable<AStarNode> {
-		int x, y;
-		int g; // cost from start
-		int h; // heuristic cost to goal
-		int f; // total cost (g + h)
-		AStarNode parent;
-
-		public AStarNode(int x, int y, AStarNode parent, int g, int h) {
-			this.x = x;
-			this.y = y;
-			this.parent = parent;
-			this.g = g;
-			this.h = h;
-			this.f = g + h;
-		}
-
-		@Override
-		public int compareTo(AStarNode other) {
-			return this.f - other.f;
-		}
-	}
-
-	// Manhattan distance heuristic
-	private int heuristic(int x, int y, int goalX, int goalY) {
-		return Math.abs(x - goalX) + Math.abs(y - goalY);
-	}
-
-	// The A* pathfinding method.
-	// Returns true if a path is found (storing it in the global "caminho"), false otherwise.
-	public boolean aStarPathfinding(int startX, int startY, int goalX, int goalY) {
-		PriorityQueue<AStarNode> openSet = new PriorityQueue<>();
-		HashSet<String> closedSet = new HashSet<>();
-
-		AStarNode startNode = new AStarNode(startX, startY, null, 0, heuristic(startX, startY, goalX, goalY));
-		openSet.add(startNode);
-
-		while (!openSet.isEmpty()) {
-			AStarNode current = openSet.poll();
-
-			if (current.x == goalX && current.y == goalY) {
-				// Reconstruct path
-				LinkedList<AStarNode> pathList = new LinkedList<>();
-				AStarNode temp = current;
-				while (temp != null) {
-					pathList.addFirst(temp);
-					temp = temp.parent;
-				}
-				// Allocate the global "caminho" array:
-				caminho = new int[pathList.size() * 2];
-				int i = 0;
-				for (AStarNode n : pathList) {
-					caminho[i++] = n.x;
-					caminho[i++] = n.y;
-				}
-				return true;
-			}
-
-			closedSet.add(current.x + "," + current.y);
-
-			// 4-directional neighbors.
-			int[][] directions = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
-			for (int[] d : directions) {
-				int nx = current.x + d[0];
-				int ny = current.y + d[1];
-
-				// Bounds check
-				if (nx < 0 || ny < 0 || nx >= mapa.Largura || ny >= mapa.Altura)
-					continue;
-				// Check if walkable (0 means walkable)
-				if (mapa.mapa[ny][nx] != 0)
-					continue;
-				if (closedSet.contains(nx + "," + ny))
-					continue;
-
-				int tentativeG = current.g + 1; // constant cost
-				int h = heuristic(nx, ny, goalX, goalY);
-				AStarNode neighbor = new AStarNode(nx, ny, current, tentativeG, h);
-				openSet.add(neighbor);
-			}
-		}
-		return false;
-	}
+//	class AStarNode implements Comparable<AStarNode> {
+//		int x, y;
+//		int g; // cost from start
+//		int h; // heuristic cost to goal
+//		int f; // total cost (g + h)
+//		AStarNode parent;
+//
+//		public AStarNode(int x, int y, AStarNode parent, int g, int h) {
+//			this.x = x;
+//			this.y = y;
+//			this.parent = parent;
+//			this.g = g;
+//			this.h = h;
+//			this.f = g + h;
+//		}
+//
+//		@Override
+//		public int compareTo(AStarNode other) {
+//			return this.f - other.f;
+//		}
+//	}
+//
+//	// Manhattan distance heuristic
+//	private int heuristic(int x, int y, int goalX, int goalY) {
+//		return Math.abs(x - goalX) + Math.abs(y - goalY);
+//	}
+//
+//	// The A* pathfinding method.
+//	// Returns true if a path is found (storing it in the global "caminho"), false otherwise.
+//	public boolean aStarPathfinding(int startX, int startY, int goalX, int goalY) {
+//		PriorityQueue<AStarNode> openSet = new PriorityQueue<>();
+//		HashSet<String> closedSet = new HashSet<>();
+//
+//		AStarNode startNode = new AStarNode(startX, startY, null, 0, heuristic(startX, startY, goalX, goalY));
+//		openSet.add(startNode);
+//
+//		while (!openSet.isEmpty()) {
+//			AStarNode current = openSet.poll();
+//
+//			if (current.x == goalX && current.y == goalY) {
+//				// Reconstruct path
+//				LinkedList<AStarNode> pathList = new LinkedList<>();
+//				AStarNode temp = current;
+//				while (temp != null) {
+//					pathList.addFirst(temp);
+//					temp = temp.parent;
+//				}
+//				// Allocate the global "caminho" array:
+//				caminho = new int[pathList.size() * 2];
+//				int i = 0;
+//				for (AStarNode n : pathList) {
+//					caminho[i++] = n.x;
+//					caminho[i++] = n.y;
+//				}
+//				return true;
+//			}
+//
+//			closedSet.add(current.x + "," + current.y);
+//
+//			// 4-directional neighbors.
+//			int[][] directions = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
+//			for (int[] d : directions) {
+//				int nx = current.x + d[0];
+//				int ny = current.y + d[1];
+//
+//				// Bounds check
+//				if (nx < 0 || ny < 0 || nx >= mapa.Largura || ny >= mapa.Altura)
+//					continue;
+//				// Check if walkable (0 means walkable)
+//				if (mapa.mapa[ny][nx] != 0)
+//					continue;
+//				if (closedSet.contains(nx + "," + ny))
+//					continue;
+//
+//				int tentativeG = current.g + 1; // constant cost
+//				int h = heuristic(nx, ny, goalX, goalY);
+//				AStarNode neighbor = new AStarNode(nx, ny, current, tentativeG, h);
+//				openSet.add(neighbor);
+//			}
+//		}
+//		return false;
+//	}
 
 	// ***** End A* helper code *****
 
@@ -260,45 +260,45 @@ Font f = new Font("", Font.BOLD, 20);
 				//****************************************************
 				// old
 				//****************************************************
-//				if(arg0.getButton()==1){
-//					if(mapa.mapa[my][mx]==0) {
-//						caminho = null;
-//						long timeini = System.currentTimeMillis();
-//
-//						// TODO Executa Algoritmo
-//						System.out.println(""+my+" "+mx);
-//						System.out.println("Herói:  "+(int)(newHeroi.X/16)+" "+(int)(newHeroi.Y/16));
-//						rodaBuscaProfundidade((int)(newHeroi.X/16),(int)(newHeroi.Y/16),mx,my);
-//
-//						long timefin = System.currentTimeMillis() - timeini;
-//						System.out.println("Tempo Final: "+timefin);
-//					}else {
-//						System.out.println("Caminho Final Bloqueado");
-//					}
-//				}
+				if(arg0.getButton()==1){
+					if(mapa.mapa[my][mx]==0) {
+						caminho = null;
+						long timeini = System.currentTimeMillis();
+
+						// TODO Executa Algoritmo
+						System.out.println(""+my+" "+mx);
+						System.out.println("Herói:  "+(int)(newHeroi.X/16)+" "+(int)(newHeroi.Y/16));
+						rodaBuscaProfundidade((int)(newHeroi.X/16),(int)(newHeroi.Y/16),mx,my);
+
+						long timefin = System.currentTimeMillis() - timeini;
+						System.out.println("Tempo Final: "+timefin);
+					}else {
+						System.out.println("Caminho Final Bloqueado");
+					}
+				}
 
 				//****************************************************
 				//new true a* implementation test
 				//****************************************************
-				if(arg0.getButton() == 1) {
-					if(mapa.mapa[my][mx] == 0) {
-						caminho = null;
-						long timeini = System.currentTimeMillis();
-
-						System.out.println("Target tile: " + my + " " + mx);
-						System.out.println("Herói:  " + (int)(newHeroi.X/16) + " " + (int)(newHeroi.Y/16));
-						boolean found = aStarPathfinding((int)(newHeroi.X/16), (int)(newHeroi.Y/16), mx, my);
-						if(found) {
-							System.out.println("Path found!");
-						} else {
-							System.out.println("Path not found.");
-						}
-						long timefin = System.currentTimeMillis() - timeini;
-						System.out.println("Tempo Final: " + timefin);
-					} else {
-						System.out.println("Caminho Final Bloqueado");
-					}
-				}
+//				if(arg0.getButton() == 1) {
+//					if(mapa.mapa[my][mx] == 0) {
+//						caminho = null;
+//						long timeini = System.currentTimeMillis();
+//
+//						System.out.println("Target tile: " + my + " " + mx);
+//						System.out.println("Herói:  " + (int)(newHeroi.X/16) + " " + (int)(newHeroi.Y/16));
+//						boolean found = aStarPathfinding((int)(newHeroi.X/16), (int)(newHeroi.Y/16), mx, my);
+//						if(found) {
+//							System.out.println("Path found!");
+//						} else {
+//							System.out.println("Path not found.");
+//						}
+//						long timefin = System.currentTimeMillis() - timeini;
+//						System.out.println("Tempo Final: " + timefin);
+//					} else {
+//						System.out.println("Caminho Final Bloqueado");
+//					}
+//				}
 				//****************************************************
 			}
 
@@ -346,13 +346,25 @@ Font f = new Font("", Font.BOLD, 20);
 			}
 		});
 
-		try {
-			imagemcharsets = ImageIO.read(getClass().getResourceAsStream("/Chara1.png"));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		newHeroi = new NewAgente(100, 100, imagemcharsets);
+//************************************************************
+		/**
+		 * Para Personagem com sprite
+		 * lembrar de mudar o tipo da variavel no cabecalho do codigo
+		 */
+//		try {
+//			imagemcharsets = ImageIO.read(getClass().getResourceAsStream("/Chara1.png"));
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
+//		newHeroi = new NewAgente(100, 100, imagemcharsets);
+//************************************************************
 
+		/**
+		 * Para Personagem bolinha azul
+		 * lembrar de mudar o tipo da variavel no cabecalho do codigo
+		  */
+		newHeroi = new MeuAgente(100, 100, Color.BLUE);
+//************************************************************
 		listadeagentes.add(newHeroi);
 
 		mousex = mousey = 0;
