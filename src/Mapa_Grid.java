@@ -44,6 +44,7 @@ public class Mapa_Grid extends Mapa{
 		int cor = buf.getElem(0);
 		for(int j = 0; j < imagem.getHeight();j++){
 			for(int i = 0; i < imagem.getWidth();i++){
+
 				int cor1 = buf.getElem(imagem.getWidth()*j+i);
 				if(cor==cor1){
 					mapa[j][i] = 0;
@@ -79,15 +80,15 @@ public class Mapa_Grid extends Mapa{
         }
         for(int i = 0; i < NumeroTilesX + somax; i++){
         	dbg.drawLine((i<<4)-offx,0,(i<<4)-offx,NumeroTilesY*16);
-        }       
-        
-        dbg.setColor(Color.black);
-        for(int j = 0; j < NumeroTilesY + somay; j++){            
+        }
+
+		dbg.setColor(Color.black);
+        for(int j = 0; j < NumeroTilesY + somay; j++){
             for(int i = 0; i < NumeroTilesX + somax; i++){
                 if(mapa[j+(MapY>>4)][i+(MapX>>4)]>0){
                 	dbg.fillRect((i<<4)-offx,(j<<4)-offy,16,16);
                 }
-            }
+			}
         }
 	}
 }
