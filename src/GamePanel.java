@@ -38,7 +38,6 @@ public static int mousex,mousey;
 	 */
 	BufferedImage imagemcharsets;
 
-//	public static ArrayList<Agente> listadeagentes = new ArrayList<Agente>();
 	public static ArrayList<MeuAgente> listadeagentes = new ArrayList<MeuAgente>();
 //	public static ArrayList<NewAgente> listadeagentes = new ArrayList<NewAgente>();
 
@@ -177,7 +176,7 @@ Font f = new Font("", Font.BOLD, 20);
 				}
 			}
 			@Override
-			public void keyReleased(KeyEvent e ) {
+			public void keyReleased(KeyEvent e) {
 				int keyCode = e.getKeyCode();
 
 				if(keyCode == KeyEvent.VK_LEFT){
@@ -208,8 +207,8 @@ Font f = new Font("", Font.BOLD, 20);
 			public void mouseDragged(MouseEvent e) {
 				// TODO Auto-generated method stub
 				if(e.getButton()==3){
-					int mousex = (int)((e.getX()+mapa.MapX)/zoom);
-					int mousey = (int)((e.getY()+mapa.MapY)/zoom);
+					int mousex = (int)(e.getX() / zoom) + mapa.MapX;
+					int mousey = (int)(e.getY() / zoom) + mapa.MapY;
 
 					int mx = mousex/16;
 					int my = mousey/16;
@@ -238,8 +237,8 @@ Font f = new Font("", Font.BOLD, 20);
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				//System.out.println(" "+arg0.getButton());
-				int mousex = (int)((arg0.getX()+mapa.MapX)/zoom);
-				int mousey = (int)((arg0.getY()+mapa.MapY)/zoom);
+				int mousex = (int)(arg0.getX() / zoom) + mapa.MapX;
+				int mousey = (int)(arg0.getY() / zoom) + mapa.MapY;
 
 				//System.out.println(""+arg0.getX()+" "+mapa.MapX+" "+zoom);
 				//System.out.println(""+mousex+" "+mousey);
@@ -264,19 +263,25 @@ Font f = new Font("", Font.BOLD, 20);
 					}
 				}
 				//****************************************************
-				// old
+				// old (busca e profundidade)
 				//****************************************************
 //				if(arg0.getButton()==1){
 //					if(mapa.mapa[my][mx]==0) {
 //						caminho = null;
 //						long timeini = System.currentTimeMillis();
 //
-//						System.out.println(""+my+" "+mx);
+//						System.out.println(""+mx+" "+my);
 //						System.out.println("Herói:  "+(int)(newHeroi.X/16)+" "+(int)(newHeroi.Y/16));
 //						rodaBuscaProfundidade((int)(newHeroi.X/16),(int)(newHeroi.Y/16),mx,my);
 //
 //						long timefin = System.currentTimeMillis() - timeini;
 //						System.out.println("Tempo Final: "+timefin + "ms.");
+//						try {
+//							newHeroi.moveAgente(caminho);
+//							caminho = null; // clean path after
+//						} catch (InterruptedException e) {
+//							throw new RuntimeException(e);
+//						}
 //					}else {
 //						System.out.println("Caminho Final Bloqueado");
 //					}
@@ -290,7 +295,7 @@ Font f = new Font("", Font.BOLD, 20);
 						caminho = null;
 						long timeini = System.currentTimeMillis();
 
-						System.out.println("Target tile: " + my + " " + mx);
+						System.out.println("Target tile: " + mx + " " + my);
 						System.out.println("Herói:  " + (int)(newHeroi.X/16) + " " + (int)(newHeroi.Y/16));
 						boolean found = aStarPathfinding((int)(newHeroi.X/16), (int)(newHeroi.Y/16), mx, my);
 						if(found) {
@@ -333,11 +338,10 @@ Font f = new Font("", Font.BOLD, 20);
 
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
-				//System.out.println("w "+e.getWheelRotation());
 				if(e.getWheelRotation()>0) {
-					zoom= zoom*0.9f;
+					zoom *= 0.9f;
 				}else if(e.getWheelRotation()<0) {
-					zoom= zoom*1.1f;
+					zoom *= 1.1f;
 				}
 
 				ntileW = (int)((960/zoom)/16)+1;
@@ -351,6 +355,8 @@ Font f = new Font("", Font.BOLD, 20);
 				}
 				mapa.NumeroTilesX = ntileW;
 				mapa.NumeroTilesY = ntileH;
+
+//				System.out.println(zoom + ": w "+e.getWheelRotation());
 			}
 		});
 
@@ -371,7 +377,7 @@ Font f = new Font("", Font.BOLD, 20);
 		 * Para Personagem bolinha azul
 		 * lembrar de mudar o tipo da variavel no cabecalho do codigo
 		  */
-		newHeroi = new MeuAgente(8, 8, Color.BLUE);
+		newHeroi = new MeuAgente(8, 8, Color.CYAN);
 //************************************************************
 		listadeagentes.add(newHeroi);
 
@@ -504,6 +510,8 @@ System.exit(0); // so enclosing JFrame/JApplet exits
 int timerfps = 0;
 private void gameUpdate(long DiffTime)
 {
+	// System.out.println(posx + " | " + posy);
+	if (DiffTime < 1) DiffTime = 1;
 
 	if(LEFT){
 		posx-=1000*DiffTime/1000.0;
@@ -543,7 +551,7 @@ private void gameRender(Graphics2D dbg)
 // draw the current frame to an image buffer
 {
     // clear the background
-    dbg.setColor(Color.white);
+    dbg.setColor(Color.WHITE);
     dbg.fillRect(0, 0, PWIDTH, PHEIGHT);
 
     AffineTransform trans = dbg.getTransform();
@@ -555,9 +563,9 @@ private void gameRender(Graphics2D dbg)
         System.out.println("Erro ao desenhar mapa");
     }
 
-    for (int i = 0; i < listadeagentes.size(); i++) {
-        listadeagentes.get(i).DesenhaSe(dbg, mapa.MapX, mapa.MapY);
-    }
+//    for (int i = 0; i < listadeagentes.size(); i++) {
+//        listadeagentes.get(i).DesenhaSe(dbg, mapa.MapX, mapa.MapY);
+//    }
 
     // mouse hover highlight
     int tileSize = 16;
@@ -593,7 +601,6 @@ private void gameRender(Graphics2D dbg)
                 dbg.fillRect(nx * 16 - mapa.MapX, ny * 16 - mapa.MapY, 16, 16);
             }
         } catch (Exception e) {
-            // handle exception (if any)
         }
     }
 
@@ -604,8 +611,8 @@ private void gameRender(Graphics2D dbg)
     dbg.drawString("FPS: " + FPS, 10, 30);
     dbg.drawString("N: " + nodosPercorridos.size(), 100, 30);
     // System.out.println("left " + LEFT);7
+	for (int i = 0; i < listadeagentes.size(); i++) {
+		listadeagentes.get(i).drawAgente(dbg, mapa.MapX, mapa.MapY, zoom);
+	}
 }
-
-
 }
-

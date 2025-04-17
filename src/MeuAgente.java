@@ -95,14 +95,14 @@ public class MeuAgente extends Agente {
 			caminhoAtual[index][0] = caminho[i];     // X
 			caminhoAtual[index][1] = caminho[i + 1]; // Y
 		}
-		System.out.println(Arrays.deepToString(caminhoAtual));
+//		System.out.println(Arrays.deepToString(caminhoAtual));
 			for (int[] grid : caminhoAtual) {
 				int gridX = grid[0]*16+8;
 				int gridY = grid[1]*16+8;
 				this.X = gridX;
 				this.Y = gridY;
 			try{
-				Thread.sleep(50);
+				Thread.sleep(25);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
