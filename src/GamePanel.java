@@ -86,6 +86,13 @@ Font f = new Font("", Font.BOLD, 20);
 		return Math.abs(x - goalX) + Math.abs(y - goalY);
 	}
 
+	//LinkedList<Nodo> nodosPercorridos = new LinkedList();
+	HashSet<Integer> nodosPercorridos = new HashSet<Integer>();
+
+	public boolean jaPassei(int nX,int nY) {
+		return nodosPercorridos.contains(nX + nY * 1000);
+	}
+
 	// A* pathfinding method.
 	// Returns true if a path is found (storing it in the variable "caminho"), false otherwise.
 	public boolean aStarPathfinding(int startX, int startY, int goalX, int goalY) {
@@ -137,6 +144,9 @@ Font f = new Font("", Font.BOLD, 20);
 				int h = heuristic(nx, ny, goalX, goalY);
 				AStarNode neighbor = new AStarNode(nx, ny, current, tentativeG, h);
 				openSet.add(neighbor);
+				synchronized (nodosPercorridos) {
+					nodosPercorridos.add(nx + ny * 1000);
+				}
 			}
 		}
 		return false;
@@ -262,30 +272,6 @@ Font f = new Font("", Font.BOLD, 20);
 						mapa.mapa[my][mx] = 0;
 					}
 				}
-				//****************************************************
-				// old (busca e profundidade)
-				//****************************************************
-//				if(arg0.getButton()==1){
-//					if(mapa.mapa[my][mx]==0) {
-//						caminho = null;
-//						long timeini = System.currentTimeMillis();
-//
-//						System.out.println(""+mx+" "+my);
-//						System.out.println("Herói:  "+(int)(newHeroi.X/16)+" "+(int)(newHeroi.Y/16));
-//						rodaBuscaProfundidade((int)(newHeroi.X/16),(int)(newHeroi.Y/16),mx,my);
-//
-//						long timefin = System.currentTimeMillis() - timeini;
-//						System.out.println("Tempo Final: "+timefin + "ms.");
-//						try {
-//							newHeroi.moveAgente(caminho);
-//							caminho = null; // clean path after
-//						} catch (InterruptedException e) {
-//							throw new RuntimeException(e);
-//						}
-//					}else {
-//						System.out.println("Caminho Final Bloqueado");
-//					}
-//				}
 
 				//****************************************************
 				//new (a*)
@@ -306,8 +292,9 @@ Font f = new Font("", Font.BOLD, 20);
 						long timefin = System.currentTimeMillis() - timeini;
 						System.out.println("Tempo Final: " + timefin + "ms.");
 						try {
-							newHeroi.moveAgente(caminho);
+							if (caminho != null) newHeroi.moveAgente(caminho);
 							caminho = null; // clean path after
+							nodosPercorridos.clear();
 						} catch (InterruptedException e) {
 							throw new RuntimeException(e);
 						}
@@ -389,68 +376,7 @@ Font f = new Font("", Font.BOLD, 20);
 	} // end of GamePanel()
 
 
-//LinkedList<Nodo> nodosPercorridos = new LinkedList();
-HashSet<Integer> nodosPercorridos = new HashSet<Integer>();
-public boolean jaPassei(int nX,int nY) {
-	return nodosPercorridos.contains(nX+nY*1000);
-}
 LinkedList<Nodo> pilhaprofundidade = new LinkedList();
-
-public boolean rodaBuscaProfundidade(int iniX,int iniY,int objX,int objY) {
-	Nodo nodoAtivo = new Nodo(iniX, iniY);
-	pilhaprofundidade.add(nodoAtivo);
-
-	while(pilhaprofundidade.size()>0) {
-		//System.out.println(""+nodoAtivo.x+" "+nodoAtivo.y+" | "+objX+" "+objY);
-
-		if(nodoAtivo.x==objX&&nodoAtivo.y==objY) {
-			caminho = new int[pilhaprofundidade.size()*2];
-			int index = 0;
-			for (Iterator iterator = pilhaprofundidade.iterator(); iterator.hasNext();) {
-				Nodo n = (Nodo) iterator.next();
-				caminho[index] = n.x;
-				caminho[index+1] = n.y;
-				index+=2;
-			}
-			return true;
-		}
-
-		synchronized (nodosPercorridos) {
-			//nodosPercorridos.add(nodoAtivo);
-			nodosPercorridos.add(nodoAtivo.x+nodoAtivo.y*1000);
-		}
-
-
-		Nodo t[] = new Nodo[4];
-		t[0] = new Nodo(nodoAtivo.x, nodoAtivo.y+1);
-		t[1] = new Nodo(nodoAtivo.x+1, nodoAtivo.y);
-		t[2] = new Nodo(nodoAtivo.x, nodoAtivo.y-1);
-		t[3] = new Nodo(nodoAtivo.x-1, nodoAtivo.y);
-
-		boolean ok = false;
-		for(int i = 0; i < 4; i++) {
-			if(t[i].y<0||t[i].y>=1000||t[i].x<0||t[i].x>=1000) {
-				continue;
-			}
-			if(mapa.mapa[t[i].y][t[i].x]==0&&jaPassei(t[i].x,t[i].y)==false) {
-				pilhaprofundidade.add(t[i]);
-				nodoAtivo=t[i];
-				ok = true;
-				break;
-			}
-		}
-
-		if(ok) {
-			continue;
-		}
-
-		pilhaprofundidade.removeLast();
-		nodoAtivo=pilhaprofundidade.getLast();
-	}
-
-	return false;
-}
-
 
 public void startGame()
 // initialise and start the thread
@@ -582,15 +508,21 @@ private void gameRender(Graphics2D dbg)
     }
     // ---- End highlight ----
 
-    synchronized (nodosPercorridos) {
-        for (Iterator iterator = nodosPercorridos.iterator(); iterator.hasNext();) {
-            Integer nxy = (Integer) iterator.next();
-            int px = nxy % 1000;
-            int py = (int)(nxy / 1000);
-            dbg.setColor(Color.GREEN);
-            dbg.fillRect(px * 16 - mapa.MapX, py * 16 - mapa.MapY, 16, 16);
-        }
-    }
+	if (nodosPercorridos != null) {
+		HashSet<Integer> snapshot;
+		synchronized (nodosPercorridos) {
+			snapshot = new HashSet<Integer>(nodosPercorridos);
+		}
+		try {
+			for (Iterator iterator = snapshot.iterator(); iterator.hasNext(); ) {
+				Integer nxy = (Integer) iterator.next();
+				int px = nxy % 1000;
+				int py = (int) (nxy / 1000);
+				dbg.setColor(Color.GREEN);
+				dbg.fillRect(px * 16 - mapa.MapX, py * 16 - mapa.MapY, 16, 16);
+			}
+		} catch (Exception e) { }
+	}
 
     if(caminho != null) {
         try {
